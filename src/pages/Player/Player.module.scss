@@ -1,0 +1,85 @@
+@import '../../mixin.scss';
+
+.view {
+  @include flex_layout(column, null, null);
+  @include set_HW(100%, 100%);
+
+  > .container {
+    @include flex_layout(column, center, center);
+    @include set_HW(100%, 100%);
+
+    > .search_view {
+      @include flex_layout(column, center, center);
+      width: calc(100% - 72px);
+      height: fit-content;
+      &.ready {
+        margin-top: 48px;
+      }
+
+      > .header {
+        @include flex_layout(row, flex-end, null);
+        margin-bottom: 12px;
+
+        > h1 {
+          font-size: 2rem;
+          font-weight: 900;
+        }
+        > p {
+          margin-left: 12px;
+          font-size: 0.8rem;
+        }
+      }
+      > .input {
+        @include flex_layout(row, center, space-between);
+        @include set_HW(60px, 100%);
+        @include border_radius(30px);
+        max-width: 720px;
+
+        > input {
+          @include set_HW(100%, 100%);
+          @include border_radius(30px);
+          font-size: 1.5rem;
+          font-weight: 900;
+          padding: 12px 24px;
+          background: var(--red_D9);
+          color: var(--red_L7);
+
+          &:focus {
+            background: var(--red_D8);
+            color: var(--red_L11);
+          }
+        }
+
+        > button {
+          margin-right: 6px;
+          min-width: 60px;
+          height: 100%;
+          @include border_radius(30px);
+        }
+      }
+    }
+    > .video_view {
+      @include set_HW(0%, 100%);
+      @include transition(0.7s cubic-bezier(0.5, 0, 0.5, 1));
+      overflow: hidden;
+
+      &.ready {
+        @include set_HW(100%, 100%);
+      }
+
+      > div {
+        @include flex_layout(column, center, center);
+        height: 100%;
+        width: 100%;
+        padding: 24px 48px 48px 48px;
+
+        > iframe {
+          width: 100%;
+          height: 100%;
+          @include border_radius(23px);
+          box-shadow: 0 0 36px -12px var(--red_D7);
+        }
+      }
+    }
+  }
+}

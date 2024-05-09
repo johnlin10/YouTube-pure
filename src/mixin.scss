@@ -1,0 +1,132 @@
+// 佈局
+@mixin max_HW {
+  height: 100%;
+  width: 100%;
+}
+
+@mixin flex_layout($direction, $main-align, $cross-align) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: $main-align;
+  justify-content: $cross-align;
+}
+
+@mixin set_HW($height, $width) {
+  height: $height;
+  width: $width;
+}
+
+// 樣式
+@function font_weight($weight) {
+  @if ($weight == 700) {
+    @return ZenMaruGothic-Black;
+  } @else if ($weight == 600) {
+    @return ZenMaruGothic-Bold;
+  } @else if ($weight == 500) {
+    @return ZenMaruGothic-Medium;
+  } @else if ($weight == 400) {
+    @return ZenMaruGothic-Regular;
+  } @else if ($weight == 300) {
+    @return ZenMaruGothic-Light;
+  } @else {
+    @return ZenMaruGothic-Medium;
+  }
+}
+@mixin font($size, $weight) {
+  font-size: $size;
+  font-family: font_weight($weight);
+}
+
+@mixin transition($value) {
+  transition: $value;
+  -webkit-transition: $value;
+  -moz-transition: $value;
+  -ms-transition: $value;
+  -o-transition: $value;
+}
+
+@mixin border_radius($radius) {
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+  -o-border-radius: $radius;
+}
+
+@mixin transform($value) {
+  transform: $value;
+  -webkit-transform: $value;
+  -moz-transform: $value;
+  -ms-transform: $value;
+  -o-transform: $value;
+}
+
+@mixin font_bg_Color($fontColor, $bgColor) {
+  color: $fontColor;
+  background: $bgColor;
+}
+
+@mixin background_opacity($color-var-name, $opacity) {
+  background: rgba($color-var-name, $opacity);
+}
+
+@mixin desaturate_color($property, $color, $amount) {
+  // 确保 $amount 是一个从 0 到 1 的值
+  $grayscale-value: $amount / 100;
+
+  @if $property == 'background' {
+    background: $color;
+    filter: grayscale($grayscale-value);
+    -webkit-filter: grayscale($grayscale-value);
+  } @else if $property == 'color' {
+    color: $color;
+    filter: grayscale($grayscale-value);
+    -webkit-filter: grayscale($grayscale-value);
+  }
+}
+
+// 通用組件樣式
+// 浮凸效果
+@mixin biconvex($height, $color) {
+  box-shadow: 0 0 0 0 $color;
+
+  &:hover {
+    box-shadow: 0 $height 0 0 $color;
+    @include transform(translateY(-$height));
+    @include transition(var(--transition-normal));
+  }
+}
+
+@mixin buttonDynamicSize($height) {
+  height: $height;
+  padding: 0 $height/2.5;
+  font-size: $height/2.5;
+  @include border_radius($height/2);
+}
+
+@mixin view_style {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 12px 0 60px + 24px 0;
+}
+
+@mixin container_style {
+  width: 100%;
+  max-width: 720px;
+  padding: 0 12px;
+}
+
+@mixin input_style {
+  padding: 12px 16px;
+  font-size: 1rem;
+  border-radius: 13px;
+  -webkit-border-radius: 13px;
+  -moz-border-radius: 13px;
+  -ms-border-radius: 13px;
+  -o-border-radius: 13px;
+}
+
+@mixin textArea {
+}

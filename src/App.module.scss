@@ -1,0 +1,10 @@
+@import './mixin.scss';
+
+div.app {
+  @include set_HW(100%, 100%);
+
+  > main {
+    @include set_HW(100%, 100%);
+    margin: 0;
+  }
+}
