@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import style from './Player.module.scss'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
 import YouTube from 'react-youtube'
 
@@ -17,6 +19,7 @@ export default function Player() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
+  // YouTube iframe options
   const opts = useMemo(
     () => ({
       host: 'https://www.youtube-nocookie.com',
@@ -33,6 +36,12 @@ export default function Player() {
     [loop, videoId]
   )
 
+  //* 輸入框處理
+  /**
+   *
+   * @param {String} url - YouTube video URL
+   * @returns
+   */
   function extractVideoID(url) {
     // 正则表达式匹配YouTube视频ID
     const regExp =
@@ -47,38 +56,61 @@ export default function Player() {
       return null
     }
   }
-
-  async function searchVideo(url) {
-    // 檢查輸入使否是一個有效的YouTube URL
-    const videoId = extractVideoID(url)
-    if (!videoId) return
-
-    // 暫存 youtube video ID
-    setVideoId(videoId)
-    setIsReady(true)
-
+  /**
+   * 取得影片資訊
+   * @param {String} videoId - YouTube video ID
+   * @returns
+   */
+  async function getVideoInfo(videoId) {
     try {
       const response = await fetch(
         `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
       )
       const videoData = await response.json()
-
-      if (videoData.items && videoData.items.length > 0) {
-        const title = videoData.items[0].snippet.title
-        setPlayerTitle(title)
-        console.log('Video title:', title)
-        return title
-      } else {
-        setPlayerTitle(null)
-        console.error('No video data found')
+      if (videoData.items.length === 0) {
+        console.error('Video not found')
+        return null
       }
+      return videoData
     } catch (error) {
       console.error('Error fetching video data:', error)
-      setPlayerTitle(null)
+      return null
     }
   }
+  /**
+   * 搜索影片資訊及啟動 YouTube iframe
+   * @param {String} url - YouTube URL
+   * @returns
+   */
+  async function searchVideo(url) {
+    // 檢查輸入使否是一個有效的YouTube URL
+    const videoId = extractVideoID(url)
+    if (!videoId) return
 
-  // 快捷鍵
+    setVideoId(videoId) // 儲存 YouTube video ID
+    setIsReady(true) // 設定準備狀態
+
+    const videoInfo = getVideoInfo(videoId)
+    if (videoInfo.item && videoInfo.items.length > 0)
+      setPlayerTitle(videoInfo.items[0].snippet.title)
+  }
+  useEffect(() => {
+    const input = document.querySelector('#urlInput')
+    const handleFocus = () => {
+      navigator.clipboard.readText().then((clipboardText) => {
+        const videoId = extractVideoID(clipboardText)
+        if (!videoId) return
+        setUrlInput(clipboardText)
+        searchVideo(clipboardText)
+      })
+    }
+    input.addEventListener('focus', handleFocus)
+    return () => {
+      input.removeEventListener('focus', handleFocus)
+    }
+  }, [])
+
+  //* 快捷鍵監聽
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -92,12 +124,19 @@ export default function Player() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  //* 事件處理函數
+  /**
+   * 輸入框內容更新
+   * @param {Event} e - URL input event
+   */
   const urlInputOnChange = (e) => {
     setUrlInput(e.target.value)
     searchVideo(e.target.value)
   }
-
-  // 播放器事件函數
+  /**
+   * 播放器事件函數
+   * @param {Event} event
+   */
   const onReady = (event) => {
     // 嵌入的播放器已經準備就緒
     setPlayer(event.target) // 儲存播放器實例
@@ -107,7 +146,7 @@ export default function Player() {
     iframe.classList.add('youtubePlayer')
   }
 
-  // 播放器控制
+  //* 播放器控制
   const closePlayer = () => {
     setVideoId()
     setIsPlaying(false)
@@ -147,7 +186,7 @@ export default function Player() {
     }
   }
 
-  // 監控進度與加載狀態
+  //* 追蹤影片進度與加載狀態
   const [progressUpdateIntervalId, setProgressUpdateIntervalId] = useState(null)
   const updateProgress = () => {
     const currentTime = player.getCurrentTime()
@@ -170,6 +209,7 @@ export default function Player() {
   const handleLoadingState = (state) => {
     setIsLoading(state === 3)
   }
+  // 當 YouTube iframe 狀態改變
   const handleStateChange = (event) => {
     const playerState = event.data
     const isPlaying = playerState === 1
@@ -195,9 +235,15 @@ export default function Player() {
             </div>
           )}
           <div className={style.input}>
-            {isReady && <button onClick={() => closePlayer()}>X</button>}
+            {isReady && (
+              <button onClick={() => closePlayer()}>
+                <FontAwesomeIcon icon={faXmark} />
+              </button>
+            )}
             <input
+              id="urlInput"
               type="text"
+              placeholder="Type youre YouTube video URL"
               value={urlInput}
               onChange={(e) => urlInputOnChange(e)}
               autoFocus

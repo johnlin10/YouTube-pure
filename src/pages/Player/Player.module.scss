@@ -14,6 +14,10 @@
       height: fit-content;
       &.ready {
         margin-top: 48px;
+
+        > .input {
+          max-width: 960px;
+        }
       }
 
       > .header {
@@ -34,6 +38,7 @@
         @include set_HW(60px, 100%);
         @include border_radius(30px);
         max-width: 720px;
+        @include transition(0.7s cubic-bezier(0.5, 0, 0.5, 1));
 
         > input {
           @include set_HW(100%, 100%);
@@ -44,6 +49,10 @@
           background: var(--red_D9);
           color: var(--red_L7);
 
+          &::placeholder {
+            color: #ffffff3f;
+          }
+
           &:focus {
             background: var(--red_D8);
             color: var(--red_L11);
@@ -51,10 +60,19 @@
         }
 
         > button {
+          @include flex_layout(column, center, center);
           margin-right: 6px;
           min-width: 60px;
           height: 100%;
+          font-size: 1.7rem;
           @include border_radius(30px);
+          background: var(--red_D5);
+          color: #ffffff7f;
+
+          &:hover {
+            background: var(--red_D3);
+            color: #ffffffa1;
+          }
         }
       }
     }
