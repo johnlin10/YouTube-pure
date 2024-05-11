@@ -1,0 +1,14 @@
+@import '../../mixin.scss';
+
+.view {
+  @include flex_layout(column, center, null);
+  @include set_HW(100%, 100%);
+  overflow-y: scroll;
+
+  > .container {
+    padding: 48px 0;
+    width: 100%;
+    max-width: 720px;
+    height: fit-content;
+  }
+}

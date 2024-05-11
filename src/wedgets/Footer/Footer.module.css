@@ -1,0 +1,1 @@
+.view{display:flex;flex-direction:column;justify-content:center;padding:6px 12px}.view>.container{display:flex;flex-direction:row;align-items:center;justify-content:center}.view>.container>*{font-size:.8rem;margin-right:12px}.view>.container>span{color:rgba(255,255,255,.6862745098)}

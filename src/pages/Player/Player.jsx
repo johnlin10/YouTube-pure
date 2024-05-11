@@ -5,6 +5,8 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
 import YouTube from 'react-youtube'
 
+import Footer from '../../wedgets/Footer/Footer'
+
 export default function Player() {
   const [urlInput, setUrlInput] = useState()
   const [videoId, setVideoId] = useState()
@@ -110,20 +112,6 @@ export default function Player() {
     }
   }, [])
 
-  //* 快捷鍵監聽
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-      } else if (event.key === 'Enter') {
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   //* 事件處理函數
   /**
    * 輸入框內容更新
@@ -202,13 +190,9 @@ export default function Player() {
     setProgressUpdateIntervalId(interval)
   }
   const stopProgressTracking = () => {
-    if (progressUpdateIntervalId) {
-      clearInterval(progressUpdateIntervalId)
-    }
+    if (progressUpdateIntervalId) clearInterval(progressUpdateIntervalId)
   }
-  const handleLoadingState = (state) => {
-    setIsLoading(state === 3)
-  }
+  const handleLoadingState = (state) => setIsLoading(state === 3)
   // 當 YouTube iframe 狀態改變
   const handleStateChange = (event) => {
     const playerState = event.data
@@ -221,6 +205,34 @@ export default function Player() {
     }
     handleLoadingState(event.target.getPlayerState())
   }
+
+  //* 快捷鍵監聽
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (isReady) {
+        // 頁面操控
+        if (event.key === 'Escape') {
+          closePlayer()
+        }
+        // 播放器操控
+        if (event.code === 'Space') {
+          // 按下空格键，影片暫停或繼續
+          handlePlayPause()
+        } else if (event.code === 'ArrowLeft') {
+          // 按下左方向键，影片向前五秒
+          handleBackward()
+        } else if (event.code === 'ArrowRight') {
+          // 按下右方向键，影片向後五秒
+          handleForward()
+        }
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className={style.view}>
@@ -265,6 +277,7 @@ export default function Player() {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

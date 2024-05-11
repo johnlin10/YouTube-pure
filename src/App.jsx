@@ -11,7 +11,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Player />} />
-          <Route path="/" element={<TermsOfUse />} />
+          <Route path="/termsOfUse" element={<TermsOfUse />} />
         </Routes>
       </main>
     </div>

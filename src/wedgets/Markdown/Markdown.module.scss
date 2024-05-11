@@ -1,0 +1,39 @@
+@import '../../mixin.scss';
+
+.view {
+  @include set_HW(fit-content, 100%);
+
+  h1 {
+    font-size: 1.75rem;
+    margin: 48px 0 12px 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin: 24px 0 6px 0;
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin: 18px 0 6px 0;
+  }
+
+  p {
+    margin: 6px 0;
+  }
+
+  ol {
+    margin-left: 24px;
+  }
+  ul {
+    margin-left: 24px;
+  }
+
+  blockquote {
+    margin: 12px 0;
+    padding-left: 12px;
+    border-left: 3px solid #ffffffaf;
+  }
+}

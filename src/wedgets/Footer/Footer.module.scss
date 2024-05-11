@@ -1,0 +1,18 @@
+@import '../../mixin.scss';
+
+.view {
+  @include flex_layout(column, null, center);
+  padding: 6px 12px;
+
+  > .container {
+    @include flex_layout(row, center, center);
+
+    > * {
+      font-size: 0.8rem;
+      margin-right: 12px;
+    }
+    > span {
+      color: #ffffffaf;
+    }
+  }
+}
